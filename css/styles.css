@@ -201,6 +201,14 @@ h1, h2, h3, .logo {
     left: 0;
 }
 
+/* Hide default mobile play button */
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls {
+    display: none !important;
+    -webkit-appearance: none;
+}
+
 .video-overlay {
     position: absolute;
     top: 0;

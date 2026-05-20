@@ -18,6 +18,23 @@ window.addEventListener("load", () => {
     // 0. Preloader
     const preloader = document.getElementById('preloader');
 
+    // Force autoplay on all videos (mobile fix)
+    document.querySelectorAll('video').forEach(video => {
+        video.muted = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.play().catch(() => {
+            // If autoplay still blocked, play on first user interaction
+            const playOnce = () => {
+                video.play();
+                document.removeEventListener('touchstart', playOnce);
+                document.removeEventListener('click', playOnce);
+            };
+            document.addEventListener('touchstart', playOnce);
+            document.addEventListener('click', playOnce);
+        });
+    });
+
     // Preloader Animation
     const initAnimations = () => {
         // 1. Hero Reveal Animations

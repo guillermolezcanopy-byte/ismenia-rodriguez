@@ -201,12 +201,25 @@ h1, h2, h3, .logo {
     left: 0;
 }
 
-/* Hide default mobile play button */
+/* Hide default mobile play button - aggressive */
 video::-webkit-media-controls-start-playback-button,
 video::-webkit-media-controls-panel,
-video::-webkit-media-controls {
+video::-webkit-media-controls,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-enclosure {
     display: none !important;
     -webkit-appearance: none;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+*::-webkit-media-controls-start-playback-button,
+*::-webkit-media-controls-play-button,
+*::-webkit-media-controls-overlay-play-button {
+    display: none !important;
+    -webkit-appearance: none;
+    opacity: 0 !important;
 }
 
 .video-overlay {

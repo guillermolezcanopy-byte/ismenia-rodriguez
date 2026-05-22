@@ -238,10 +238,37 @@ video::-webkit-media-controls-enclosure {
     opacity: 0;
 }
 
-/* Hero Content Cinematic Reveal — hidden during video, fades in when paused */
+/* White Overlay for End of Video */
+.white-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+}
+
+.white-overlay.visible {
+    opacity: 1;
+}
+
+/* Hero Logo Inline */
+.hero-logo-inline {
+    width: clamp(150px, 20vw, 250px);
+    height: auto;
+    object-fit: contain;
+    margin: 1rem auto 2rem;
+    display: block;
+}
+
+/* Hero Content Cinematic Reveal — hidden during video, fades in at the dark ending */
 .hero-content {
     text-align: center;
-    color: white;
+    color: var(--color-text); /* Black text to show on white background */
     z-index: 3;
     padding: 0 1rem;
     opacity: 0;
@@ -264,13 +291,19 @@ video::-webkit-media-controls-enclosure {
     transition-delay: 0.3s;
 }
 
+.hero-content.revealed .hero-logo-inline {
+    opacity: 1;
+    transition-delay: 0.5s;
+}
+
 .hero-content.revealed .btn {
     opacity: 1;
-    transition-delay: 0.6s;
+    transition-delay: 0.7s;
 }
 
 .hero-content .hero-title,
 .hero-content .hero-subtitle,
+.hero-content .hero-logo-inline,
 .hero-content .btn {
     opacity: 0;
     transition: opacity 1.2s ease;

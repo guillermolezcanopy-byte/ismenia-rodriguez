@@ -35,25 +35,44 @@ window.addEventListener("load", () => {
         });
     });
 
-    // Hero Video Content Reveal — stop video at 2s, fade in text
+    // Hero Video Content Reveal — stop video at 2s, fade in white background and text/logo
     const heroVideo = document.getElementById('heroVideo');
+    const videoOverlay = document.querySelector('.video-overlay');
+    const whiteOverlay = document.querySelector('.white-overlay');
     const heroContent = document.querySelector('.hero-content');
     const scrollIndicator = document.querySelector('.scroll-indicator');
     let contentRevealed = false;
 
     if (heroVideo) {
         heroVideo.addEventListener('timeupdate', () => {
-            if (!contentRevealed && heroVideo.currentTime >= 1.8) {
+            if (!contentRevealed && heroVideo.currentTime >= 2) {
                 contentRevealed = true;
                 
                 // Pause the video right before the dress deconstructs
                 heroVideo.pause();
                 
-                // Fade in the hero content (title, subtitle, btn)
+                // Fade in the white background
+                if (whiteOverlay) whiteOverlay.classList.add('visible');
+                
+                // Fade out the dark overlay
+                if (videoOverlay) videoOverlay.classList.add('faded');
+                
+                // Fade in the hero content (title, subtitle, logo, btn)
                 if (heroContent) heroContent.classList.add('revealed');
                 
                 // Fade in scroll indicator
                 if (scrollIndicator) {
+                    // Update scroll indicator color for white background
+                    scrollIndicator.style.color = '#000';
+                    const line = scrollIndicator.querySelector('.line');
+                    if(line) {
+                        line.style.backgroundColor = 'rgba(0,0,0,0.2)';
+                    }
+                    // Add dynamic style for the animated pseudo-element
+                    const style = document.createElement('style');
+                    style.innerHTML = '.scroll-indicator .line::after { background-color: #000; }';
+                    document.head.appendChild(style);
+                    
                     gsap.to(scrollIndicator, { opacity: 1, duration: 1.5, delay: 1, ease: "power2.out" });
                 }
             }
@@ -198,50 +217,23 @@ window.addEventListener("load", () => {
     const waitlistSuccess = document.querySelector('.waitlist-success');
     
     if (waitlistForm) {
-        waitlistForm.addEventListener('submit', async (e) => {
+        waitlistForm.addEventListener('submit', (e) => {
             e.preventDefault(); // Prevent page reload
             
-            const submitBtn = waitlistForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = 'Enviando...';
-            submitBtn.disabled = true;
-
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value
-            };
-
-            try {
-                // Send data to GHL Webhook
-                await fetch('https://services.leadconnectorhq.com/hooks/Tonfzi9ULpYjVs5xROQs/webhook-trigger/043962cc-4e3f-4dfc-8da2-a2aed7ebbd3c', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                // Simple fade out of the form and fade in of the success message
-                gsap.to(waitlistForm, {
-                    opacity: 0,
-                    y: -20,
-                    duration: 0.5,
-                    onComplete: () => {
-                        waitlistForm.style.display = 'none';
-                        waitlistSuccess.style.display = 'block';
-                        gsap.fromTo(waitlistSuccess, 
-                            { opacity: 0, y: 20 },
-                            { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
-                        );
-                    }
-                });
-            } catch (error) {
-                console.error('Error submitting form:', error);
-                submitBtn.textContent = originalBtnText;
-                submitBtn.disabled = false;
-                alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.');
-            }
+            // Simple fade out of the form and fade in of the success message
+            gsap.to(waitlistForm, {
+                opacity: 0,
+                y: -20,
+                duration: 0.5,
+                onComplete: () => {
+                    waitlistForm.style.display = 'none';
+                    waitlistSuccess.style.display = 'block';
+                    gsap.fromTo(waitlistSuccess, 
+                        { opacity: 0, y: 20 },
+                        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+                    );
+                }
+            });
         });
     }
 });

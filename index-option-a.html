@@ -48,10 +48,12 @@
                 <source src="assets/hero-video.mp4?v=2" type="video/mp4">
             </video>
             <div class="video-overlay"></div>
+            <div class="white-overlay"></div>
         </div>
         <div class="hero-content">
             <h1 class="hero-title gsap-reveal">Tu esencia, hecha arte.</h1>
             <p class="hero-subtitle gsap-reveal delay-1">Prendas exclusivas creadas desde la estampa del tejido hasta la pieza final. Cada diseño celebra tu belleza única.</p>
+            <img src="assets/logo.png" alt="ISMENIA Logo" class="hero-logo-inline">
             <div class="gsap-reveal delay-2">
                 <a href="#waitlist" class="btn btn-primary">Quiero Acceso Exclusivo</a>
             </div>
@@ -147,15 +149,15 @@
                 <p class="text-center section-body">El acceso es limitado. Deja tus datos y te avisaremos en cuanto lancemos una nueva coleccion en nuestro showroom privado.</p>
                 <form action="#" method="POST" class="waitlist-form">
                     <div class="form-group">
-                        <input type="text" id="name" name="name" required placeholder=" " minlength="3" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" title="Solo se permiten letras y espacios.">
+                        <input type="text" id="name" name="name" required placeholder=" ">
                         <label for="name">Nombre completo</label>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" required placeholder=" " pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Introduce un correo electrónico válido.">
+                        <input type="email" id="email" name="email" required placeholder=" ">
                         <label for="email">Correo electrónico</label>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" name="phone" required placeholder=" " minlength="8" maxlength="20" pattern="^[0-9+\-\s()]+$" title="Introduce un número de teléfono válido.">
+                        <input type="tel" id="phone" name="phone" required placeholder=" ">
                         <label for="phone">Teléfono</label>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">Reservar Mi Lugar</button>

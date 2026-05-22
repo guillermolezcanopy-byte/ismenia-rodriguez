@@ -19,12 +19,12 @@ window.addEventListener("load", () => {
     const preloader = document.getElementById('preloader');
 
     // Force autoplay on all videos (mobile fix)
-    document.querySelectorAll('video').forEach(video => {
+    // Force autoplay on non-hero videos (hero video is triggered after preloader)
+    document.querySelectorAll('video:not(#heroVideo)').forEach(video => {
         video.muted = true;
         video.setAttribute('muted', '');
         video.setAttribute('playsinline', '');
         video.play().catch(() => {
-            // If autoplay still blocked, play on first user interaction
             const playOnce = () => {
                 video.play();
                 document.removeEventListener('touchstart', playOnce);
@@ -35,30 +35,49 @@ window.addEventListener("load", () => {
         });
     });
 
+    // Hero Video Content Reveal — fade in hero text as video reaches dark ending
+    const heroVideo = document.getElementById('heroVideo');
+    const videoOverlay = document.querySelector('.video-overlay');
+    const heroContent = document.querySelector('.hero-content');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    let contentRevealed = false;
+
+    if (heroVideo) {
+        heroVideo.addEventListener('timeupdate', () => {
+            if (heroVideo.duration && !contentRevealed) {
+                const timeRemaining = heroVideo.duration - heroVideo.currentTime;
+                // When 2 seconds remain, start the content reveal
+                if (timeRemaining <= 2) {
+                    contentRevealed = true;
+                    // Fade out the dark overlay so the video's natural black shows
+                    if (videoOverlay) videoOverlay.classList.add('faded');
+                    // Fade in the hero content
+                    if (heroContent) heroContent.classList.add('revealed');
+                    // Fade in scroll indicator
+                    if (scrollIndicator) {
+                        gsap.to(scrollIndicator, { opacity: 1, duration: 1.5, delay: 1, ease: "power2.out" });
+                    }
+                }
+            }
+        });
+
+        // When video ends, ensure content is fully visible
+        heroVideo.addEventListener('ended', () => {
+            if (!contentRevealed) {
+                contentRevealed = true;
+                if (videoOverlay) videoOverlay.classList.add('faded');
+                if (heroContent) heroContent.classList.add('revealed');
+                if (scrollIndicator) {
+                    gsap.to(scrollIndicator, { opacity: 1, duration: 1, ease: "power2.out" });
+                }
+            }
+        });
+    }
+
     // Preloader Animation
     const initAnimations = () => {
-        // 1. Hero Reveal Animations
-        const tl = gsap.timeline();
-        
-        tl.fromTo(".hero-title", 
-            { y: 50, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }
-        )
-        .fromTo(".hero-subtitle", 
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
-            "-=0.8"
-        )
-        .fromTo(".hero-content .btn", 
-            { y: 20, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-            "-=0.6"
-        )
-        .fromTo(".scroll-indicator",
-            { opacity: 0 },
-            { opacity: 1, duration: 1 },
-            "-=0.4"
-        );
+        // Hero content reveal is now handled by the video timeupdate listener
+        // No initial hero animations — content stays hidden until video ends
     };
 
     gsap.to(".preloader-logo", { opacity: 1, duration: 1, ease: "power2.inOut" });
@@ -70,6 +89,20 @@ window.addEventListener("load", () => {
         onComplete: () => {
             preloader.style.display = "none";
             initAnimations(); // Start hero animations after preloader finishes
+            // Start hero video from the beginning after preloader disappears
+            if (heroVideo) {
+                heroVideo.currentTime = 0;
+                heroVideo.play().catch(() => {
+                    const playOnce = () => {
+                        heroVideo.currentTime = 0;
+                        heroVideo.play();
+                        document.removeEventListener('touchstart', playOnce);
+                        document.removeEventListener('click', playOnce);
+                    };
+                    document.addEventListener('touchstart', playOnce);
+                    document.addEventListener('click', playOnce);
+                });
+            }
         }
     });
 

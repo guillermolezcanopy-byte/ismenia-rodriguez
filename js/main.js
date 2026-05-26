@@ -46,7 +46,6 @@ window.addEventListener("load", () => {
             if (!contentRevealed && heroVideo.currentTime >= 1.0) {
                 contentRevealed = true;
                 
-                // Keep the video playing/looping (cinemagraph style) so the dress keeps moving!
                 // Fade in the hero content (title, subtitle, btn)
                 if (heroContent) heroContent.classList.add('revealed');
                 

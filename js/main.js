@@ -35,7 +35,7 @@ window.addEventListener("load", () => {
         });
     });
 
-    // Hero Video Content Reveal — stop video at 2s, fade in text
+    // Hero Video Content Reveal — let video loop, fade in text at 1.0s
     const heroVideo = document.getElementById('heroVideo');
     const heroContent = document.querySelector('.hero-content');
     const scrollIndicator = document.querySelector('.scroll-indicator');
@@ -43,12 +43,10 @@ window.addEventListener("load", () => {
 
     if (heroVideo) {
         heroVideo.addEventListener('timeupdate', () => {
-            if (!contentRevealed && heroVideo.currentTime >= 1.8) {
+            if (!contentRevealed && heroVideo.currentTime >= 1.0) {
                 contentRevealed = true;
                 
-                // Pause the video right before the dress deconstructs
-                heroVideo.pause();
-                
+                // Keep the video playing/looping (cinemagraph style) so the dress keeps moving!
                 // Fade in the hero content (title, subtitle, btn)
                 if (heroContent) heroContent.classList.add('revealed');
                 

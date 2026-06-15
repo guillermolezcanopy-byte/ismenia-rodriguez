@@ -362,8 +362,56 @@ video::-webkit-media-controls-enclosure {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
+
+/* Collection Carousel Layout */
+.collection-carousel {
+    position: relative;
+    width: 100%;
+}
+
+.collection-group {
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.collection-group.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    position: relative;
+}
+
+/* Dots Navigation */
+.carousel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 3rem;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--color-text);
+    background-color: transparent;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.carousel-dot.active {
+    background-color: var(--color-text);
+    transform: scale(1.2);
+}
+
 
 .masonry-item {
     position: relative;

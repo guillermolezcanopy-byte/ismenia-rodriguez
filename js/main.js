@@ -160,7 +160,7 @@ window.addEventListener("load", () => {
         once: true // Ensures they only animate once and stay there
     });
 
-    // Mini Carousels in Masonry Grid - Change image every 1 second
+    // Mini Carousels in Masonry Grid - Change image every 2.5 seconds
     const carousels = document.querySelectorAll('.img-carousel');
     carousels.forEach(carousel => {
         const layers = carousel.querySelectorAll('.img-layer');
@@ -173,6 +173,74 @@ window.addEventListener("load", () => {
             }, 2500); // 2.5 seconds
         }
     });
+
+    // 4.b Collections Group Carousel (9 Collections) - Manual Switch Only
+    const groups = document.querySelectorAll('.collection-group');
+    const dots = document.querySelectorAll('.carousel-dot');
+    if (groups.length > 1) {
+        let currentGroup = 0;
+
+        function showGroup(index) {
+            groups.forEach((g, i) => {
+                if (i === index) {
+                    g.classList.add('active');
+                    // Refresh ScrollTrigger so that subsequent page elements recalculate their scroll positions
+                    setTimeout(() => {
+                        ScrollTrigger.refresh();
+                    }, 50);
+                } else {
+                    g.classList.remove('active');
+                }
+            });
+            dots.forEach((d, i) => {
+                if (i === index) {
+                    d.classList.add('active');
+                } else {
+                    d.classList.remove('active');
+                }
+            });
+            currentGroup = index;
+        }
+
+        // Dot click interaction
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                showGroup(index);
+            });
+        });
+
+        // Mobile swipe gestures
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carouselContainer = document.querySelector('.collection-carousel');
+
+        if (carouselContainer) {
+            carouselContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            carouselContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        function handleSwipe() {
+            const threshold = 60; // minimum pixels to count as swipe
+            if (touchEndX < touchStartX - threshold) {
+                // Swiped Left -> Show next group
+                const nextIndex = (currentGroup + 1) % groups.length;
+                showGroup(nextIndex);
+            } else if (touchEndX > touchStartX + threshold) {
+                // Swiped Right -> Show previous group
+                const prevIndex = (currentGroup - 1 + groups.length) % groups.length;
+                showGroup(prevIndex);
+            }
+        }
+    }
+
+
+
 
     // 5. WhatsApp Button Scale In
     gsap.fromTo(".whatsapp-float",

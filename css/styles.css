@@ -192,7 +192,8 @@ h1, h2, h3, .logo {
     z-index: -1;
 }
 
-.hero-video {
+.hero-video,
+.hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -461,58 +462,72 @@ video::-webkit-media-controls-enclosure {
     transition: transform 0.8s ease;
 }
 
-/* Curtain Overlay Effect */
+/* Curtain Overlay Effect - Elegant Grey Semitransparent Curtain */
 .curtain-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(40, 40, 40, 0.45); /* Grey and almost transparent */
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    
-    /* The curtain starts fully covering the top and bottom, but we want it to open on hover.
-       Alternatively, it starts hidden (height 0) and opens like a curtain dropping down, 
-       or we can do a split curtain effect. Let's do a dropdown curtain. */
-    transform: translateY(-100%);
-    transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
+    pointer-events: none; /* Let click pass through to masonry-item */
 }
 
 .curtain-content {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease 0.3s;
+    transform: translateY(15px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     text-align: center;
+    width: 100%;
 }
 
 .curtain-content h3 {
     font-family: var(--font-heading);
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--color-light-gray);
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-.curtain-content p {
-    font-size: 1rem;
-    line-height: 1.5;
+.curtain-hint {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    margin-top: 8px;
+    color: white;
+    transition: color 0.4s ease;
 }
 
-.masonry-item:hover .img-placeholder {
-    transform: scale(1.05);
+.masonry-item {
+    cursor: pointer;
 }
 
 .masonry-item:hover .curtain-overlay {
-    transform: translateY(0); /* Drops the curtain down */
+    opacity: 1; /* Fade in curtain on hover/touch */
 }
 
 .masonry-item:hover .curtain-content {
     opacity: 1;
     transform: translateY(0);
+}
+
+.masonry-item:hover .curtain-hint {
+    color: var(--color-accent);
+}
+
+.masonry-item:hover .img-placeholder {
+    transform: scale(1.05);
 }
 
 /* Waitlist Form */
@@ -714,11 +729,12 @@ video::-webkit-media-controls-enclosure {
     }
     
     .curtain-content h3 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
     }
     
-    .curtain-content p {
-        font-size: 0.85rem;
+    .curtain-hint {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
     }
 
     /* Waitlist Form */

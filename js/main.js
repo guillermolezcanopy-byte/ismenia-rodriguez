@@ -35,32 +35,19 @@ window.addEventListener("load", () => {
         });
     });
 
-    // Hero Video Content Reveal — let video loop, fade in text at 1.0s
-    const heroVideo = document.getElementById('heroVideo');
+    // Hero Image Content Reveal
     const heroContent = document.querySelector('.hero-content');
     const scrollIndicator = document.querySelector('.scroll-indicator');
-    let contentRevealed = false;
-
-    if (heroVideo) {
-        heroVideo.addEventListener('timeupdate', () => {
-            if (!contentRevealed && heroVideo.currentTime >= 1.0) {
-                contentRevealed = true;
-                
-                // Fade in the hero content (title, subtitle, btn)
-                if (heroContent) heroContent.classList.add('revealed');
-                
-                // Fade in scroll indicator
-                if (scrollIndicator) {
-                    gsap.to(scrollIndicator, { opacity: 1, duration: 1.5, delay: 1, ease: "power2.out" });
-                }
-            }
-        });
-    }
 
     // Preloader Animation
     const initAnimations = () => {
-        // Hero content reveal is now handled by the video timeupdate listener
-        // No initial hero animations — content stays hidden until video ends
+        // Fade in the hero content (title, subtitle, btn)
+        if (heroContent) heroContent.classList.add('revealed');
+        
+        // Fade in scroll indicator
+        if (scrollIndicator) {
+            gsap.to(scrollIndicator, { opacity: 1, duration: 1.5, delay: 0.5, ease: "power2.out" });
+        }
     };
 
     gsap.to(".preloader-logo", { opacity: 1, duration: 1, ease: "power2.inOut" });
@@ -72,20 +59,6 @@ window.addEventListener("load", () => {
         onComplete: () => {
             preloader.style.display = "none";
             initAnimations(); // Start hero animations after preloader finishes
-            // Start hero video from the beginning after preloader disappears
-            if (heroVideo) {
-                heroVideo.currentTime = 0;
-                heroVideo.play().catch(() => {
-                    const playOnce = () => {
-                        heroVideo.currentTime = 0;
-                        heroVideo.play();
-                        document.removeEventListener('touchstart', playOnce);
-                        document.removeEventListener('click', playOnce);
-                    };
-                    document.addEventListener('touchstart', playOnce);
-                    document.addEventListener('click', playOnce);
-                });
-            }
         }
     });
 
@@ -160,17 +133,22 @@ window.addEventListener("load", () => {
         once: true // Ensures they only animate once and stay there
     });
 
-    // Mini Carousels in Masonry Grid - Change image every 2.5 seconds
-    const carousels = document.querySelectorAll('.img-carousel');
-    carousels.forEach(carousel => {
+    // Click/Tap to cycle images in collections
+    const masonryItems = document.querySelectorAll('.masonry-item');
+    masonryItems.forEach(item => {
+        const carousel = item.querySelector('.img-carousel');
+        if (!carousel) return;
         const layers = carousel.querySelectorAll('.img-layer');
         if (layers.length > 1) {
             let current = 0;
-            setInterval(() => {
+            item.addEventListener('click', (e) => {
+                // If user clicks on a link inside the card, don't trigger the next image
+                if (e.target.tagName === 'A' || e.target.closest('a')) return;
+                
                 layers[current].classList.remove('active');
                 current = (current + 1) % layers.length;
                 layers[current].classList.add('active');
-            }, 2500); // 2.5 seconds
+            });
         }
     });
 
